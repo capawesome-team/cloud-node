@@ -1,0 +1,64 @@
+{
+  "name": "@capawesome/cloud-sdk",
+  "version": "0.0.1",
+  "description": "Node.js SDK for the Capawesome Cloud API.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "clean": "rimraf dist",
+    "dev": "tsdown --watch",
+    "lint": "eslint . && prettier --check .",
+    "fmt": "eslint --fix . && prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build",
+    "prepare": "husky",
+    "release": "commit-and-tag-version"
+  },
+  "lint-staged": {
+    "*.{ts,js,json,md}": "prettier --write"
+  },
+  "keywords": [
+    "capawesome",
+    "capacitor",
+    "cloud",
+    "live-updates",
+    "sdk"
+  ],
+  "author": "Capawesome",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/node": "^22.10.5",
+    "commit-and-tag-version": "12.6.1",
+    "eslint": "^9.18.0",
+    "husky": "9.1.7",
+    "lint-staged": "17.0.5",
+    "prettier": "^3.4.2",
+    "prettier-plugin-organize-imports": "4.0.0",
+    "rimraf": "^6.0.1",
+    "tsdown": "^0.15.6",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0",
+    "vitest": "^3.0.2"
+  }
+}
