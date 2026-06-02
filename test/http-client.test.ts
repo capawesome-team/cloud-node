@@ -59,4 +59,14 @@ describe('HttpClient', () => {
     expect(error).toBeInstanceOf(CapawesomeCloudError);
     expect((error as CapawesomeCloudError).body).toEqual({ message: 'Not authorized.' });
   });
+
+  it('resolves to undefined for an empty response body without a content-length header', async () => {
+    const fetchMock = vi.fn(async () => new Response(null, { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await expect(
+      client.apps.channels.pause({ appId: 'app-1', channelId: 'c-1' }),
+    ).resolves.toBeUndefined();
+  });
 });

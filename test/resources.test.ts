@@ -63,6 +63,22 @@ describe('resources', () => {
     expect(formData.get('name')).toBe('My Cert');
     expect(formData.get('platform')).toBe('ios');
     expect(formData.get('file')).toBeInstanceOf(Blob);
+    expect((formData.get('file') as File).name).toBe('cert.p12');
+  });
+
+  it('does not send a filename when none is provided', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'cert-1', name: 'My Cert' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.certificates.create({
+      appId: 'app-1',
+      name: 'My Cert',
+      file: new Uint8Array([1, 2, 3]),
+    });
+
+    const formData = getLastRequest().init.body as FormData;
+    // Without an explicit filename, the platform default ("blob") is used — never "undefined".
+    expect((formData.get('file') as File).name).not.toBe('undefined');
   });
 
   it('downloads a build artifact as a stream', async () => {

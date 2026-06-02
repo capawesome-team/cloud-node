@@ -48,10 +48,11 @@ export class HttpClient {
    */
   public async request<T>(options: RequestOptions): Promise<T> {
     const response = await this.fetch(options);
-    if (response.status === 204 || response.headers.get('content-length') === '0') {
+    if (response.status === 204) {
       return undefined as T;
     }
-    return (await response.json()) as T;
+    const text = await response.text();
+    return (text ? JSON.parse(text) : undefined) as T;
   }
 
   /**

@@ -103,7 +103,11 @@ export class CertificatesResource extends BaseResource {
   public async create(options: CreateCertificateOptions): Promise<AppCertificate> {
     const formData = new FormData();
     const file = options.file instanceof Blob ? options.file : new Blob([options.file]);
-    formData.append('file', file, options.fileName);
+    if (options.fileName === undefined) {
+      formData.append('file', file);
+    } else {
+      formData.append('file', file, options.fileName);
+    }
     formData.append('name', options.name);
     if (options.platform !== undefined) {
       formData.append('platform', options.platform);
