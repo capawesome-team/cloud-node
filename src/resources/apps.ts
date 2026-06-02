@@ -33,7 +33,7 @@ export interface App {
 }
 
 export interface ListAppsOptions extends PaginationOptions {
-  organizationId?: string;
+  organizationId: string;
   /**
    * Filter apps by a search query.
    */
@@ -134,7 +134,7 @@ export class AppsResource extends BaseResource {
   /**
    * Get apps.
    */
-  public async list(options: ListAppsOptions = {}): Promise<App[]> {
+  public async list(options: ListAppsOptions): Promise<App[]> {
     return this.http.request<App[]>({
       method: 'GET',
       path: '/v1/apps',

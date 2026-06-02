@@ -34,16 +34,18 @@ const client = new CapawesomeCloud({
   token: process.env.CAPAWESOME_TOKEN!,
 });
 
-const apps = await client.apps.list();
+const apps = await client.apps.list({ organizationId: process.env.CAPAWESOME_ORGANIZATION_ID! });
 console.log(apps);
 ```
 
 ### Configuration
 
-| Option    | Type     | Default                           | Description                                     |
-| --------- | -------- | --------------------------------- | ----------------------------------------------- |
-| `token`   | `string` | —                                 | API token used to authenticate.                 |
-| `baseUrl` | `string` | `https://api.cloud.capawesome.io` | Base URL of the API (for self-hosting/testing). |
+| Option       | Type     | Default                           | Description                                                                    |
+| ------------ | -------- | --------------------------------- | ------------------------------------------------------------------------------ |
+| `token`      | `string` | —                                 | API token used to authenticate.                                                |
+| `baseUrl`    | `string` | `https://api.cloud.capawesome.io` | Base URL of the API (for self-hosting/testing).                                |
+| `timeout`    | `number` | `60000`                           | Request timeout in milliseconds. Does not apply to streamed downloads.         |
+| `maxRetries` | `number` | `3`                               | Retries for transient failures (network, `429`, `5xx`) on idempotent requests. |
 
 ## Usage
 
@@ -52,7 +54,7 @@ All methods take a single options object and return a typed promise. Most operat
 ### Apps
 
 ```ts
-const apps = await client.apps.list();
+const apps = await client.apps.list({ organizationId });
 const app = await client.apps.get({ appId });
 const created = await client.apps.create({ name: 'My App', type: 'capacitor' });
 await client.apps.update({ appId, name: 'Renamed App' });

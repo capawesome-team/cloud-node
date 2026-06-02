@@ -25,8 +25,36 @@ export class CapawesomeCloudError extends Error {
 }
 
 function extractMessage(body: unknown): string | undefined {
-  if (body && typeof body === 'object' && 'message' in body) {
-    const message = (body as { message: unknown }).message;
+  if (typeof body === 'string') {
+    return body || undefined;
+  }
+  if (!body || typeof body !== 'object') {
+    return undefined;
+  }
+  const record = body as Record<string, unknown>;
+  // `{ message: string }`
+  const direct = messageOf(record);
+  if (direct) {
+    return direct;
+  }
+  const error = record.error;
+  // `{ error: [{ message: string }] }`
+  if (Array.isArray(error)) {
+    return messageOf(error[0]);
+  }
+  // `{ error: { issues: [{ message: string }] } }` (validation errors)
+  if (error && typeof error === 'object') {
+    const issues = (error as Record<string, unknown>).issues;
+    if (Array.isArray(issues)) {
+      return messageOf(issues[0]);
+    }
+  }
+  return undefined;
+}
+
+function messageOf(value: unknown): string | undefined {
+  if (value && typeof value === 'object') {
+    const message = (value as Record<string, unknown>).message;
     if (typeof message === 'string') {
       return message;
     }

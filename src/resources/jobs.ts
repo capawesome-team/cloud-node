@@ -39,7 +39,7 @@ export interface JobLog {
 }
 
 export interface ListJobsOptions extends PaginationOptions {
-  organizationId?: string;
+  organizationId: string;
   status?: JobStatus;
 }
 
@@ -55,7 +55,7 @@ export class JobsResource extends BaseResource {
   /**
    * Get jobs.
    */
-  public async list(options: ListJobsOptions = {}): Promise<Job[]> {
+  public async list(options: ListJobsOptions): Promise<Job[]> {
     return this.http.request<Job[]>({
       method: 'GET',
       path: '/v1/jobs',
