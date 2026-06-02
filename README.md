@@ -1,5 +1,9 @@
 # @capawesome/cloud-sdk
 
+[![npm version](https://img.shields.io/npm/v/@capawesome/cloud-sdk)](https://www.npmjs.com/package/@capawesome/cloud-sdk)
+[![npm downloads](https://img.shields.io/npm/dm/@capawesome/cloud-sdk)](https://www.npmjs.com/package/@capawesome/cloud-sdk)
+[![license](https://img.shields.io/npm/l/@capawesome/cloud-sdk)](https://github.com/capawesome-team/cloud-node/blob/main/LICENSE)
+
 Node.js SDK for the [Capawesome Cloud](https://capawesome.io/cloud/) API.
 
 It provides a fully typed, promise-based interface for managing apps, live update channels and deployments, native builds, app store destinations, and more.
