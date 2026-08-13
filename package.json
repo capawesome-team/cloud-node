@@ -2,6 +2,10 @@
   "name": "@capawesome/cloud-sdk",
   "version": "0.1.1",
   "description": "Node.js SDK for the Capawesome Cloud API.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/capawesome-team/cloud-node.git"
+  },
   "type": "module",
   "exports": {
     ".": {
