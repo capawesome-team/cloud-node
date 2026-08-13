@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.2](https://github.com/capawesome-team/cloud-node/compare/v0.1.1...v0.1.2) (2026-08-13)
+
+
+### Bug Fixes
+
+* add repository field for npm provenance ([f990749](https://github.com/capawesome-team/cloud-node/commit/f9907494c273063d6b3860573529a518abb6ff93))
+
 ## [0.1.1](https://github.com/capawesome-team/cloud-node/compare/v0.1.0...v0.1.1) (2026-08-13)
 
 ### Bug Fixes
