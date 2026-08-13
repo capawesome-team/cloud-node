@@ -235,12 +235,9 @@ npm run test:watch # re-run on change
 
 ### Publishing
 
-Releases are driven by [`commit-and-tag-version`](https://github.com/absolute-version/commit-and-tag-version), which derives the next version and changelog entries from [Conventional Commits](https://www.conventionalcommits.org).
+Releases are automated with [Release Please](https://github.com/googleapis/release-please), which derives the next version and changelog entries from [Conventional Commits](https://www.conventionalcommits.org).
 
-1. Make sure `main` is up to date and CI is green.
-2. Run `npm run release`. This bumps the version, regenerates `CHANGELOG.md`, and creates a release commit plus a matching git tag — all locally, nothing is pushed yet. Pass `--dry-run` first if you want to preview the result.
-3. Review the generated commit and changelog, then push everything: `git push --follow-tags origin main`.
-4. Publish to npm with `npm publish`. The `prepublishOnly` hook rebuilds `dist/` beforehand, so you always ship a fresh build.
+On every push to `main`, the [Release workflow](./.github/workflows/release.yml) creates or updates a release pull request that bumps the version and updates `CHANGELOG.md`. Merging that pull request creates the git tag and GitHub release, and publishes the package to npm.
 
 ## License
 
