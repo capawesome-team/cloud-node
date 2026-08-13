@@ -25,7 +25,7 @@ Official SDKs for the Capawesome Cloud API:
 npm install @capawesome/cloud-sdk
 ```
 
-**Requirements:** Node.js 20 or later. The package is published as ESM only.
+**Requirements:** Node.js 20.19 or later. The package is published as ESM only, but can also be loaded from CommonJS via `require()`.
 
 ## Getting started
 
