@@ -6,7 +6,7 @@
 
 Node.js SDK for the [Capawesome Cloud](https://capawesome.io/cloud/) API.
 
-It provides a fully typed, promise-based interface for managing apps, live update channels and deployments, native builds, app store destinations, and more.
+It provides a fully typed, promise-based interface for managing organizations, apps, live update channels and deployments, native builds, app store destinations, and more.
 
 > **Note:** The Capawesome Cloud API is still in development and may change without notice. Response types intentionally expose only the most relevant properties to minimize breaking changes.
 
@@ -44,16 +44,35 @@ console.log(apps);
 
 ### Configuration
 
-| Option       | Type     | Default                           | Description                                                                    |
-| ------------ | -------- | --------------------------------- | ------------------------------------------------------------------------------ |
-| `token`      | `string` | —                                 | API token used to authenticate.                                                |
-| `baseUrl`    | `string` | `https://api.cloud.capawesome.io` | Base URL of the API (for self-hosting/testing).                                |
-| `timeout`    | `number` | `60000`                           | Request timeout in milliseconds. Does not apply to streamed downloads.         |
-| `maxRetries` | `number` | `3`                               | Retries for transient failures (network, `429`, `5xx`) on idempotent requests. |
+| Option       | Type           | Default                           | Description                                                                    |
+| ------------ | -------------- | --------------------------------- | ------------------------------------------------------------------------------ |
+| `token`      | `string`       | —                                 | API token used to authenticate.                                                |
+| `baseUrl`    | `string`       | `https://api.cloud.capawesome.io` | Base URL of the API (for self-hosting/testing).                                |
+| `timeout`    | `number`       | `60000`                           | Request timeout in milliseconds. Does not apply to streamed downloads.         |
+| `maxRetries` | `number`       | `3`                               | Retries for transient failures (network, `429`, `5xx`) on idempotent requests. |
+| `fetch`      | `typeof fetch` | `globalThis.fetch`                | The `fetch` implementation used for all requests.                              |
 
 ## Usage
 
 All methods take a single options object and return a typed promise. Most operations are scoped to an app via `appId`.
+
+### Organizations
+
+```ts
+const organizations = await client.organizations.list();
+const members = await client.organizations.members.list({ organizationId });
+
+// Invite a new member
+await client.organizations.invitations.create({
+  organizationId,
+  email: 'jane@example.com',
+  role: 'member',
+});
+
+// Group apps and members in a team
+const team = await client.organizations.teams.create({ organizationId, name: 'Mobile' });
+await client.organizations.teams.apps.create({ organizationId, teamId: team.id, appId });
+```
 
 ### Apps
 
@@ -89,6 +108,24 @@ const deployment = await client.apps.deployments.create({
 });
 ```
 
+### Git repositories
+
+Native builds are created from the repository an app is linked to:
+
+```ts
+const [connection] = await client.organizations.gitConnections.list({ organizationId });
+const repositories = await client.organizations.gitConnections.listRepositories({
+  organizationId,
+  gitConnectionId: connection.id,
+});
+
+await client.apps.repository.set({
+  appId,
+  gitConnectionId: connection.id,
+  path: repositories[0].path,
+});
+```
+
 ### Native builds
 
 ```ts
@@ -106,6 +143,12 @@ while (job.status === 'queued' || job.status === 'pending' || job.status === 'in
 }
 
 const logs = await client.jobs.getLogs({ jobId: job.id });
+
+// Explain a failure
+if (job.status === 'failed') {
+  const { summary } = await client.jobs.getFailureSummary({ jobId: job.id });
+  console.error(summary);
+}
 ```
 
 #### Build artifacts
@@ -168,23 +211,32 @@ await client.apps.environments.variables.create({
 
 ## Available resources
 
-Resources mirror the API's path hierarchy. App-scoped resources are nested under `client.apps.*`; top-level resources are exposed directly on the client.
+Resources mirror the API's path hierarchy. App-scoped resources are nested under `client.apps.*`, organization-scoped resources under `client.organizations.*`; top-level resources are exposed directly on the client.
 
-| Resource                       | Description                                       |
-| ------------------------------ | ------------------------------------------------- |
-| `client.apps`                  | Create, read, update, delete and transfer apps.   |
-| `client.apps.channels`         | Manage live update channels (incl. pause/resume). |
-| `client.apps.deployments`      | Promote builds to channels or destinations.       |
-| `client.apps.builds`           | Trigger and manage native builds.                 |
-| `client.apps.builds.artifacts` | List and download build artifacts.                |
-| `client.apps.buildSources`     | Register and download native build sources.       |
-| `client.apps.certificates`     | Manage signing certificates.                      |
-| `client.apps.destinations`     | Manage app store publishing destinations.         |
-| `client.apps.environments`     | Manage environments, secrets and variables.       |
-| `client.apps.automations`      | Manage build automations.                         |
-| `client.apps.devices`          | Manage registered devices.                        |
-| `client.apps.webhooks`         | Manage app webhooks.                              |
-| `client.jobs`                  | Inspect background jobs and their logs.           |
+| Resource                              | Description                                       |
+| ------------------------------------- | ------------------------------------------------- |
+| `client.apps`                         | Create, read, update, delete and transfer apps.   |
+| `client.apps.channels`                | Manage live update channels (incl. pause/resume). |
+| `client.apps.deployments`             | Promote builds to channels or destinations.       |
+| `client.apps.builds`                  | Trigger and manage native builds.                 |
+| `client.apps.builds.artifacts`        | List and download build artifacts.                |
+| `client.apps.buildSources`            | Register and download native build sources.       |
+| `client.apps.certificates`            | Manage signing certificates.                      |
+| `client.apps.destinations`            | Manage app store publishing destinations.         |
+| `client.apps.environments`            | Manage environments, secrets and variables.       |
+| `client.apps.automations`             | Manage build automations.                         |
+| `client.apps.devices`                 | Manage registered devices.                        |
+| `client.apps.webhooks`                | Manage app webhooks.                              |
+| `client.apps.configurations`          | Manage native app configurations.                 |
+| `client.apps.repository`              | Link an app to a Git repository.                  |
+| `client.organizations`                | Create, read and update organizations.            |
+| `client.organizations.members`        | Manage organization members.                      |
+| `client.organizations.invitations`    | Invite users to an organization.                  |
+| `client.organizations.teams`          | Manage teams and their apps and members.          |
+| `client.organizations.licenseKeys`    | Manage license keys for Insiders packages.        |
+| `client.organizations.gitConnections` | Manage Git connections and browse repositories.   |
+| `client.jobs`                         | Inspect background jobs and their logs.           |
+| `client.users`                        | Access the authenticated user.                    |
 
 ## Error handling
 

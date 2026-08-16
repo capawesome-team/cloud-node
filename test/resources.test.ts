@@ -81,6 +81,82 @@ describe('resources', () => {
     expect((formData.get('file') as File).name).not.toBe('undefined');
   });
 
+  it('builds nested organization team paths', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'team-app-1' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.organizations.teams.apps.create({
+      organizationId: 'org-1',
+      teamId: 'team-1',
+      appId: 'app-1',
+    });
+
+    const { url, init } = getLastRequest();
+    expect(url).toBe('https://api.cloud.capawesome.io/v1/organizations/org-1/teams/team-1/apps');
+    expect(JSON.parse(init.body as string)).toEqual({ appId: 'app-1' });
+  });
+
+  it('requests team relations only when included', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'team-1' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.organizations.teams.get({ organizationId: 'org-1', teamId: 'team-1' });
+    expect(new URL(getLastRequest().url).searchParams.has('relations')).toBe(false);
+
+    await client.organizations.teams.get({
+      organizationId: 'org-1',
+      teamId: 'team-1',
+      includeApps: true,
+      includeMembers: true,
+    });
+    expect(new URL(getLastRequest().url).searchParams.get('relations')).toBe('apps,members');
+  });
+
+  it('requests the assigned packages of license keys', async () => {
+    const { getLastRequest } = mockFetchJson([]);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.organizations.licenseKeys.list({
+      organizationId: 'org-1',
+      includePackages: true,
+    });
+
+    expect(new URL(getLastRequest().url).searchParams.get('relations')).toBe(
+      'licenseKeyPackages,licenseKeyPackages.package',
+    );
+  });
+
+  it('links a repository with a put request', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'app-1' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.repository.set({
+      appId: 'app-1',
+      gitConnectionId: 'connection-1',
+      path: 'capawesome-team/cloud-node',
+    });
+
+    const { url, init } = getLastRequest();
+    expect(init.method).toBe('PUT');
+    expect(url).toBe('https://api.cloud.capawesome.io/v1/apps/app-1/repository');
+    expect(JSON.parse(init.body as string)).toEqual({
+      gitConnectionId: 'connection-1',
+      path: 'capawesome-team/cloud-node',
+    });
+  });
+
+  it('cancels a job by updating its status', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'job-1', status: 'canceled' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.jobs.cancel({ jobId: 'job-1' });
+
+    const { url, init } = getLastRequest();
+    expect(init.method).toBe('PATCH');
+    expect(url).toBe('https://api.cloud.capawesome.io/v1/jobs/job-1');
+    expect(JSON.parse(init.body as string)).toEqual({ status: 'canceled' });
+  });
+
   it('downloads a build artifact as a stream', async () => {
     const fetchMock = vi.fn(async () => new Response(new Uint8Array([1, 2, 3]), { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);

@@ -27,6 +27,22 @@ describe('HttpClient', () => {
     expect(getLastRequest().url).toBe('https://example.com/v1/apps?organizationId=org-1');
   });
 
+  it('uses a custom fetch implementation instead of the global one', async () => {
+    const globalFetch = vi.fn(async () => new Response('[]', { status: 200 }));
+    vi.stubGlobal('fetch', globalFetch);
+    const requestedUrls: string[] = [];
+    const customFetch = vi.fn(async (input: RequestInfo | URL) => {
+      requestedUrls.push(String(input));
+      return new Response('[]', { status: 200 });
+    });
+    const client = new CapawesomeCloud({ token: 't', fetch: customFetch });
+
+    await client.organizations.list();
+
+    expect(globalFetch).not.toHaveBeenCalled();
+    expect(requestedUrls).toEqual(['https://api.cloud.capawesome.io/v1/organizations']);
+  });
+
   it('serializes query parameters and skips undefined values', async () => {
     const { getLastRequest } = mockFetchJson([]);
     const client = new CapawesomeCloud({ token: 't' });

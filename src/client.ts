@@ -2,6 +2,8 @@ import type { HttpClientOptions } from './http-client';
 import { HttpClient } from './http-client';
 import { AppsResource } from './resources/apps';
 import { JobsResource } from './resources/jobs';
+import { OrganizationsResource } from './resources/organizations';
+import { UsersResource } from './resources/users';
 
 export type CapawesomeCloudOptions = HttpClientOptions;
 
@@ -30,10 +32,20 @@ export class CapawesomeCloud {
    * Inspect background jobs and their logs.
    */
   public readonly jobs: JobsResource;
+  /**
+   * Manage organizations and their sub-resources (members, teams, ...).
+   */
+  public readonly organizations: OrganizationsResource;
+  /**
+   * Access the authenticated user.
+   */
+  public readonly users: UsersResource;
 
   constructor(options: CapawesomeCloudOptions) {
     const http = new HttpClient(options);
     this.apps = new AppsResource(http);
     this.jobs = new JobsResource(http);
+    this.organizations = new OrganizationsResource(http);
+    this.users = new UsersResource(http);
   }
 }

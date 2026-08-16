@@ -35,6 +35,13 @@ export interface HttpClientOptions {
    * @default 3
    */
   maxRetries?: number;
+  /**
+   * The `fetch` implementation used for all requests. Useful in environments
+   * that provide their own (e.g. a custom dispatcher or a proxied `fetch`).
+   *
+   * @default globalThis.fetch
+   */
+  fetch?: typeof fetch;
 }
 
 export type QueryValue = string | number | boolean | string[] | undefined | null;
@@ -59,12 +66,14 @@ export class HttpClient {
   private readonly baseUrl: string;
   private readonly timeout: number;
   private readonly maxRetries: number;
+  private readonly fetchImpl?: typeof fetch;
 
   constructor(options: HttpClientOptions) {
     this.token = options.token.trim();
     this.baseUrl = options.baseUrl ?? DEFAULT_BASE_URL;
     this.timeout = options.timeout ?? DEFAULT_TIMEOUT;
     this.maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES;
+    this.fetchImpl = options.fetch;
   }
 
   /**
@@ -105,11 +114,12 @@ export class HttpClient {
       body = JSON.stringify(options.body);
     }
     const isIdempotent = IDEMPOTENT_METHODS.has(options.method);
+    const fetchImpl = this.fetchImpl ?? globalThis.fetch;
 
     for (let attempt = 0; ; attempt++) {
       let response: Response;
       try {
-        response = await fetch(url, {
+        response = await fetchImpl(url, {
           method: options.method,
           headers,
           body,

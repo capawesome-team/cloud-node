@@ -6,10 +6,12 @@ import { BuildSourcesResource } from './build-sources';
 import { BuildsResource } from './builds';
 import { CertificatesResource } from './certificates';
 import { ChannelsResource } from './channels';
+import { ConfigurationsResource } from './configurations';
 import { DeploymentsResource } from './deployments';
 import { DestinationsResource } from './destinations';
 import { DevicesResource } from './devices';
 import { EnvironmentsResource } from './environments';
+import { RepositoryResource } from './repository';
 import { WebhooksResource } from './webhooks';
 
 /**
@@ -97,6 +99,10 @@ export class AppsResource extends BaseResource {
    */
   public readonly channels: ChannelsResource;
   /**
+   * Manage native app configurations.
+   */
+  public readonly configurations: ConfigurationsResource;
+  /**
    * Manage deployments.
    */
   public readonly deployments: DeploymentsResource;
@@ -113,6 +119,10 @@ export class AppsResource extends BaseResource {
    */
   public readonly environments: EnvironmentsResource;
   /**
+   * Manage the linked Git repository.
+   */
+  public readonly repository: RepositoryResource;
+  /**
    * Manage app webhooks.
    */
   public readonly webhooks: WebhooksResource;
@@ -124,10 +134,12 @@ export class AppsResource extends BaseResource {
     this.buildSources = new BuildSourcesResource(http);
     this.certificates = new CertificatesResource(http);
     this.channels = new ChannelsResource(http);
+    this.configurations = new ConfigurationsResource(http);
     this.deployments = new DeploymentsResource(http);
     this.destinations = new DestinationsResource(http);
     this.devices = new DevicesResource(http);
     this.environments = new EnvironmentsResource(http);
+    this.repository = new RepositoryResource(http);
     this.webhooks = new WebhooksResource(http);
   }
 
