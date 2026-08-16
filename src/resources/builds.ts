@@ -49,6 +49,15 @@ export interface CreateBuildOptions {
   appCertificateId?: string;
   appCertificateName?: string;
   appChannelId?: string;
+  /**
+   * The id of the configuration to overwrite the native app configuration with.
+   */
+  appConfigurationId?: string;
+  /**
+   * The name of the configuration to overwrite the native app configuration
+   * with. Ignored if `appConfigurationId` is set.
+   */
+  appConfigurationName?: string;
   appDestinationId?: string;
   appEnvironmentId?: string;
   appEnvironmentName?: string;

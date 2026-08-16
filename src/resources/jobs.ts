@@ -40,7 +40,10 @@ export interface JobLog {
 
 export interface ListJobsOptions extends PaginationOptions {
   organizationId: string;
-  status?: JobStatus;
+  /**
+   * Filter jobs by one or more statuses.
+   */
+  status?: JobStatus | JobStatus[];
 }
 
 export interface GetJobOptions {
@@ -76,7 +79,7 @@ export class JobsResource extends BaseResource {
       path: '/v1/jobs',
       query: {
         organizationId: options.organizationId,
-        status: options.status,
+        status: Array.isArray(options.status) ? options.status.join(',') : options.status,
         limit: options.limit,
         offset: options.offset,
       },

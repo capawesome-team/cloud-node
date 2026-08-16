@@ -28,6 +28,24 @@ describe('resources', () => {
     expect(JSON.parse(getLastRequest().init.body as string)).toEqual({ appBuildId: 'build-1' });
   });
 
+  it('creates a build with a configuration', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'build-1' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.builds.create({
+      appId: 'app-1',
+      platform: 'ios',
+      gitRef: 'main',
+      appConfigurationId: 'configuration-1',
+    });
+
+    expect(JSON.parse(getLastRequest().init.body as string)).toEqual({
+      platform: 'ios',
+      gitRef: 'main',
+      appConfigurationId: 'configuration-1',
+    });
+  });
+
   it('builds nested environment secret paths', async () => {
     const { getLastRequest } = mockFetchJson({ id: 'secret-1', key: 'API_KEY' });
     const client = new CapawesomeCloud({ token: 't' });
@@ -164,6 +182,17 @@ describe('resources', () => {
       gitConnectionId: 'connection-1',
       path: 'capawesome-team/cloud-node',
     });
+  });
+
+  it('joins multiple job statuses into a single query parameter', async () => {
+    const { getLastRequest } = mockFetchJson([]);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.jobs.list({ organizationId: 'org-1', status: ['queued', 'in_progress'] });
+    expect(new URL(getLastRequest().url).searchParams.get('status')).toBe('queued,in_progress');
+
+    await client.jobs.list({ organizationId: 'org-1', status: 'failed' });
+    expect(new URL(getLastRequest().url).searchParams.get('status')).toBe('failed');
   });
 
   it('cancels a job by updating its status', async () => {
