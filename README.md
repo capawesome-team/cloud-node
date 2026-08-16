@@ -60,6 +60,7 @@ All methods take a single options object and return a typed promise. Most operat
 
 ```ts
 const organizations = await client.organizations.list();
+const organization = await client.organizations.get({ organizationId });
 const members = await client.organizations.members.list({ organizationId });
 
 // Invite a new member

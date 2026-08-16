@@ -31,6 +31,10 @@ export interface Organization {
   updatedAt: string;
 }
 
+export interface GetOrganizationOptions {
+  organizationId: string;
+}
+
 export interface CreateOrganizationOptions {
   name: string;
   /**
@@ -83,6 +87,16 @@ export class OrganizationsResource extends BaseResource {
    */
   public async list(): Promise<Organization[]> {
     return this.http.request<Organization[]>({ method: 'GET', path: '/v1/organizations' });
+  }
+
+  /**
+   * Get an organization by id.
+   */
+  public async get(options: GetOrganizationOptions): Promise<Organization> {
+    return this.http.request<Organization>({
+      method: 'GET',
+      path: `/v1/organizations/${options.organizationId}`,
+    });
   }
 
   /**

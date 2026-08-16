@@ -81,6 +81,17 @@ describe('resources', () => {
     expect((formData.get('file') as File).name).not.toBe('undefined');
   });
 
+  it('gets an organization by id', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'org-1', name: 'Acme' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.organizations.get({ organizationId: 'org-1' });
+
+    const { url, init } = getLastRequest();
+    expect(init.method).toBe('GET');
+    expect(url).toBe('https://api.cloud.capawesome.io/v1/organizations/org-1');
+  });
+
   it('builds nested organization team paths', async () => {
     const { getLastRequest } = mockFetchJson({ id: 'team-app-1' });
     const client = new CapawesomeCloud({ token: 't' });
@@ -120,8 +131,18 @@ describe('resources', () => {
       organizationId: 'org-1',
       includePackages: true,
     });
-
     expect(new URL(getLastRequest().url).searchParams.get('relations')).toBe(
+      'licenseKeyPackages,licenseKeyPackages.package',
+    );
+
+    await client.organizations.licenseKeys.get({
+      organizationId: 'org-1',
+      licenseKeyId: 'key-1',
+      includePackages: true,
+    });
+    const { url } = getLastRequest();
+    expect(new URL(url).pathname).toBe('/v1/organizations/org-1/license-keys/key-1');
+    expect(new URL(url).searchParams.get('relations')).toBe(
       'licenseKeyPackages,licenseKeyPackages.package',
     );
   });

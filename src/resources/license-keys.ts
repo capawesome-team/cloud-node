@@ -62,6 +62,12 @@ export interface ListLicenseKeysOptions {
 export interface GetLicenseKeyOptions {
   organizationId: string;
   licenseKeyId: string;
+  /**
+   * Whether to include the packages assigned to the license key.
+   *
+   * @default false
+   */
+  includePackages?: boolean;
 }
 
 export interface CreateLicenseKeyOptions {
@@ -114,6 +120,7 @@ export class LicenseKeysResource extends BaseResource {
     return this.http.request<LicenseKey>({
       method: 'GET',
       path: `/v1/organizations/${options.organizationId}/license-keys/${options.licenseKeyId}`,
+      query: { relations: options.includePackages ? PACKAGE_RELATIONS : undefined },
     });
   }
 
