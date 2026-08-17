@@ -17,6 +17,10 @@ export interface AppEnvironment {
 
 export interface ListEnvironmentsOptions extends PaginationOptions {
   appId: string;
+  /**
+   * Filter environments by name.
+   */
+  name?: string;
   query?: string;
 }
 
@@ -59,7 +63,12 @@ export class EnvironmentsResource extends BaseResource {
     return this.http.request<AppEnvironment[]>({
       method: 'GET',
       path: `/v1/apps/${options.appId}/environments`,
-      query: { query: options.query, limit: options.limit, offset: options.offset },
+      query: {
+        name: options.name,
+        query: options.query,
+        limit: options.limit,
+        offset: options.offset,
+      },
     });
   }
 

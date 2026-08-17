@@ -46,6 +46,52 @@ describe('resources', () => {
     });
   });
 
+  it('filters environments by name', async () => {
+    const { getLastRequest } = mockFetchJson([]);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.environments.list({ appId: 'app-1', name: 'production' });
+
+    const url = new URL(getLastRequest().url);
+    expect(url.pathname).toBe('/v1/apps/app-1/environments');
+    expect(url.searchParams.get('name')).toBe('production');
+  });
+
+  it('filters automations by name', async () => {
+    const { getLastRequest } = mockFetchJson([]);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.automations.list({ appId: 'app-1', name: 'nightly' });
+
+    expect(new URL(getLastRequest().url).searchParams.get('name')).toBe('nightly');
+  });
+
+  it('creates an automation with configuration and name references', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'automation-1' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.automations.create({
+      appId: 'app-1',
+      name: 'nightly',
+      triggerType: 'branch',
+      appChannelName: 'production',
+      appConfigurationId: 'configuration-1',
+      appConfigurationName: 'ignored',
+      appEnvironmentName: 'staging',
+    });
+
+    const { url, init } = getLastRequest();
+    expect(url).toBe('https://api.cloud.capawesome.io/v1/apps/app-1/automations');
+    expect(JSON.parse(init.body as string)).toEqual({
+      name: 'nightly',
+      triggerType: 'branch',
+      appChannelName: 'production',
+      appConfigurationId: 'configuration-1',
+      appConfigurationName: 'ignored',
+      appEnvironmentName: 'staging',
+    });
+  });
+
   it('builds nested environment secret paths', async () => {
     const { getLastRequest } = mockFetchJson({ id: 'secret-1', key: 'API_KEY' });
     const client = new CapawesomeCloud({ token: 't' });
