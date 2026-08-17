@@ -72,9 +72,21 @@ export interface DeleteCertificateOptions {
   certificateId?: string;
   /**
    * The name of the certificate to delete. Either `certificateId` or `name`
-   * must be provided; `certificateId` takes precedence.
+   * must be provided; `certificateId` takes precedence. Because certificate
+   * names are only unique per platform and type, deleting by name should be
+   * accompanied by `platform` and `type` to target exactly one certificate.
    */
   name?: string;
+  /**
+   * Restrict a name-based delete to certificates of this platform. Ignored
+   * when deleting by `certificateId`.
+   */
+  platform?: Platform;
+  /**
+   * Restrict a name-based delete to certificates of this type. Ignored when
+   * deleting by `certificateId`.
+   */
+  type?: AppCertificateType;
 }
 
 export class CertificatesResource extends BaseResource {
@@ -161,6 +173,7 @@ export class CertificatesResource extends BaseResource {
       id: options.certificateId,
       name: options.name,
       resource: 'certificate',
+      query: { platform: options.platform, type: options.type },
     });
   }
 }

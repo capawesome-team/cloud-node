@@ -67,9 +67,16 @@ export interface DeleteDestinationOptions {
   destinationId?: string;
   /**
    * The name of the destination to delete. Either `destinationId` or `name`
-   * must be provided; `destinationId` takes precedence.
+   * must be provided; `destinationId` takes precedence. Because destination
+   * names are only unique per platform, deleting by name should be accompanied
+   * by `platform` to target exactly one destination.
    */
   name?: string;
+  /**
+   * Restrict a name-based delete to destinations of this platform. Ignored
+   * when deleting by `destinationId`.
+   */
+  platform?: AppDestinationPlatform;
 }
 
 export class DestinationsResource extends BaseResource {
@@ -133,6 +140,7 @@ export class DestinationsResource extends BaseResource {
       id: options.destinationId,
       name: options.name,
       resource: 'destination',
+      query: { platform: options.platform },
     });
   }
 }

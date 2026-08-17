@@ -287,6 +287,36 @@ describe('resources', () => {
     expect(parsed.searchParams.get('name')).toBe('production/staging');
   });
 
+  it('forwards the platform and type when deleting a certificate by name', async () => {
+    const { getLastRequest } = mockFetchJson(null);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.certificates.delete({
+      appId: 'app-1',
+      name: 'Distribution',
+      platform: 'ios',
+      type: 'production',
+    });
+
+    const parsed = new URL(getLastRequest().url);
+    expect(parsed.pathname).toBe('/v1/apps/app-1/certificates');
+    expect(parsed.searchParams.get('name')).toBe('Distribution');
+    expect(parsed.searchParams.get('platform')).toBe('ios');
+    expect(parsed.searchParams.get('type')).toBe('production');
+  });
+
+  it('forwards the platform when deleting a destination by name', async () => {
+    const { getLastRequest } = mockFetchJson(null);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.destinations.delete({ appId: 'app-1', name: 'App Store', platform: 'ios' });
+
+    const parsed = new URL(getLastRequest().url);
+    expect(parsed.pathname).toBe('/v1/apps/app-1/destinations');
+    expect(parsed.searchParams.get('name')).toBe('App Store');
+    expect(parsed.searchParams.get('platform')).toBe('ios');
+  });
+
   it('prefers the id over the name when deleting a certificate', async () => {
     const { getLastRequest } = mockFetchJson(null);
     const client = new CapawesomeCloud({ token: 't' });
