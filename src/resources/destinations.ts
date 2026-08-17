@@ -60,7 +60,23 @@ export interface UpdateDestinationOptions extends Partial<CreateDestinationOptio
 
 export interface DeleteDestinationOptions {
   appId: string;
-  destinationId: string;
+  /**
+   * The id of the destination to delete. Either `destinationId` or `name` must
+   * be provided; `destinationId` takes precedence.
+   */
+  destinationId?: string;
+  /**
+   * The name of the destination to delete. Either `destinationId` or `name`
+   * must be provided; `destinationId` takes precedence. Because destination
+   * names are only unique per platform, deleting by name should be accompanied
+   * by `platform` to target exactly one destination.
+   */
+  name?: string;
+  /**
+   * Restrict a name-based delete to destinations of this platform. Ignored
+   * when deleting by `destinationId`.
+   */
+  platform?: AppDestinationPlatform;
 }
 
 export class DestinationsResource extends BaseResource {
@@ -116,12 +132,15 @@ export class DestinationsResource extends BaseResource {
   }
 
   /**
-   * Delete an app destination.
+   * Delete an app destination by id or name.
    */
   public async delete(options: DeleteDestinationOptions): Promise<void> {
-    await this.http.request<void>({
-      method: 'DELETE',
-      path: `/v1/apps/${options.appId}/destinations/${options.destinationId}`,
+    await this.deleteByIdOrName({
+      collectionPath: `/v1/apps/${options.appId}/destinations`,
+      id: options.destinationId,
+      name: options.name,
+      resource: 'destination',
+      query: { platform: options.platform },
     });
   }
 }

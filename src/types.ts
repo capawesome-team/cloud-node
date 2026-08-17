@@ -9,6 +9,16 @@ export type Platform = 'android' | 'ios' | 'web';
 export type AppType = 'android' | 'capacitor' | 'cordova' | 'ios';
 
 /**
+ * The role of a member within an organization.
+ */
+export type OrganizationRole = 'owner' | 'admin' | 'billing' | 'member' | 'viewer';
+
+/**
+ * The provider hosting a Git repository.
+ */
+export type GitProvider = 'azure_devops' | 'bitbucket' | 'gitea' | 'git_http' | 'github' | 'gitlab';
+
+/**
  * The macOS stack used to run a native build.
  */
 export type BuildStack = 'macos-sequoia' | 'macos-tahoe';

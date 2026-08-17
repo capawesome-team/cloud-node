@@ -65,7 +65,28 @@ export interface UpdateCertificateOptions {
 
 export interface DeleteCertificateOptions {
   appId: string;
-  certificateId: string;
+  /**
+   * The id of the certificate to delete. Either `certificateId` or `name` must
+   * be provided; `certificateId` takes precedence.
+   */
+  certificateId?: string;
+  /**
+   * The name of the certificate to delete. Either `certificateId` or `name`
+   * must be provided; `certificateId` takes precedence. Because certificate
+   * names are only unique per platform and type, deleting by name should be
+   * accompanied by `platform` and `type` to target exactly one certificate.
+   */
+  name?: string;
+  /**
+   * Restrict a name-based delete to certificates of this platform. Ignored
+   * when deleting by `certificateId`.
+   */
+  platform?: Platform;
+  /**
+   * Restrict a name-based delete to certificates of this type. Ignored when
+   * deleting by `certificateId`.
+   */
+  type?: AppCertificateType;
 }
 
 export class CertificatesResource extends BaseResource {
@@ -144,12 +165,15 @@ export class CertificatesResource extends BaseResource {
   }
 
   /**
-   * Delete an app certificate.
+   * Delete an app certificate by id or name.
    */
   public async delete(options: DeleteCertificateOptions): Promise<void> {
-    await this.http.request<void>({
-      method: 'DELETE',
-      path: `/v1/apps/${options.appId}/certificates/${options.certificateId}`,
+    await this.deleteByIdOrName({
+      collectionPath: `/v1/apps/${options.appId}/certificates`,
+      id: options.certificateId,
+      name: options.name,
+      resource: 'certificate',
+      query: { platform: options.platform, type: options.type },
     });
   }
 }

@@ -23,6 +23,10 @@ export interface AppAutomation {
 
 export interface ListAutomationsOptions extends PaginationOptions {
   appId: string;
+  /**
+   * Filter automations by name.
+   */
+  name?: string;
   platform?: Platform;
   query?: string;
 }
@@ -42,9 +46,32 @@ export interface CreateAutomationOptions {
   buildType?: AppBuildType;
   buildStack?: BuildStack;
   appCertificateId?: string;
+  /**
+   * The name of the certificate to use. Ignored if `appCertificateId` is set.
+   */
+  appCertificateName?: string;
   appChannelId?: string;
+  /**
+   * The name of the channel to deploy to. Ignored if `appChannelId` is set.
+   */
+  appChannelName?: string;
+  appConfigurationId?: string;
+  /**
+   * The name of the configuration to use. Ignored if `appConfigurationId` is
+   * set.
+   */
+  appConfigurationName?: string;
   appDestinationId?: string;
+  /**
+   * The name of the destination to deploy to. Ignored if `appDestinationId` is
+   * set.
+   */
+  appDestinationName?: string;
   appEnvironmentId?: string;
+  /**
+   * The name of the environment to use. Ignored if `appEnvironmentId` is set.
+   */
+  appEnvironmentName?: string;
 }
 
 export interface UpdateAutomationOptions extends Partial<CreateAutomationOptions> {
@@ -67,6 +94,7 @@ export class AutomationsResource extends BaseResource {
       method: 'GET',
       path: `/v1/apps/${options.appId}/automations`,
       query: {
+        name: options.name,
         platform: options.platform,
         query: options.query,
         limit: options.limit,

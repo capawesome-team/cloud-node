@@ -40,14 +40,32 @@ export interface JobLog {
 
 export interface ListJobsOptions extends PaginationOptions {
   organizationId: string;
-  status?: JobStatus;
+  /**
+   * Filter jobs by one or more statuses.
+   */
+  status?: JobStatus | JobStatus[];
 }
 
 export interface GetJobOptions {
   jobId: string;
 }
 
+/**
+ * An AI generated summary explaining why a job failed.
+ */
+export interface JobFailureSummary {
+  summary: string;
+}
+
 export interface GetJobLogsOptions {
+  jobId: string;
+}
+
+export interface GetJobFailureSummaryOptions {
+  jobId: string;
+}
+
+export interface CancelJobOptions {
   jobId: string;
 }
 
@@ -61,7 +79,7 @@ export class JobsResource extends BaseResource {
       path: '/v1/jobs',
       query: {
         organizationId: options.organizationId,
-        status: options.status,
+        status: Array.isArray(options.status) ? options.status.join(',') : options.status,
         limit: options.limit,
         offset: options.offset,
       },
@@ -82,6 +100,28 @@ export class JobsResource extends BaseResource {
     return this.http.request<JobLog[]>({
       method: 'GET',
       path: `/v1/jobs/${options.jobId}/logs`,
+    });
+  }
+
+  /**
+   * Get a summary explaining why a job failed. The summary is generated on the
+   * first request and cached afterwards. Only available for failed jobs.
+   */
+  public async getFailureSummary(options: GetJobFailureSummaryOptions): Promise<JobFailureSummary> {
+    return this.http.request<JobFailureSummary>({
+      method: 'POST',
+      path: `/v1/jobs/${options.jobId}/failure-summary`,
+    });
+  }
+
+  /**
+   * Cancel a job that has not finished yet.
+   */
+  public async cancel(options: CancelJobOptions): Promise<Job> {
+    return this.http.request<Job>({
+      method: 'PATCH',
+      path: `/v1/jobs/${options.jobId}`,
+      body: { status: 'canceled' },
     });
   }
 }

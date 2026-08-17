@@ -17,6 +17,10 @@ export interface AppEnvironment {
 
 export interface ListEnvironmentsOptions extends PaginationOptions {
   appId: string;
+  /**
+   * Filter environments by name.
+   */
+  name?: string;
   query?: string;
 }
 
@@ -33,6 +37,20 @@ export interface CreateEnvironmentOptions {
 export interface UpdateEnvironmentOptions {
   appId: string;
   environmentId: string;
+  name?: string;
+}
+
+export interface DeleteEnvironmentOptions {
+  appId: string;
+  /**
+   * The id of the environment to delete. Either `environmentId` or `name` must
+   * be provided; `environmentId` takes precedence.
+   */
+  environmentId?: string;
+  /**
+   * The name of the environment to delete. Either `environmentId` or `name`
+   * must be provided; `environmentId` takes precedence.
+   */
   name?: string;
 }
 
@@ -59,7 +77,12 @@ export class EnvironmentsResource extends BaseResource {
     return this.http.request<AppEnvironment[]>({
       method: 'GET',
       path: `/v1/apps/${options.appId}/environments`,
-      query: { query: options.query, limit: options.limit, offset: options.offset },
+      query: {
+        name: options.name,
+        query: options.query,
+        limit: options.limit,
+        offset: options.offset,
+      },
     });
   }
 
@@ -94,6 +117,18 @@ export class EnvironmentsResource extends BaseResource {
       method: 'PATCH',
       path: `/v1/apps/${appId}/environments/${environmentId}`,
       body,
+    });
+  }
+
+  /**
+   * Delete an app environment by id or name.
+   */
+  public async delete(options: DeleteEnvironmentOptions): Promise<void> {
+    await this.deleteByIdOrName({
+      collectionPath: `/v1/apps/${options.appId}/environments`,
+      id: options.environmentId,
+      name: options.name,
+      resource: 'environment',
     });
   }
 }
