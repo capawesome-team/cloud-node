@@ -241,6 +241,65 @@ describe('resources', () => {
     expect(new URL(getLastRequest().url).searchParams.get('status')).toBe('failed');
   });
 
+  it('deletes a channel by id', async () => {
+    const { getLastRequest } = mockFetchJson(null);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.channels.delete({ appId: 'app-1', channelId: 'channel-1' });
+
+    const { url, init } = getLastRequest();
+    expect(init.method).toBe('DELETE');
+    expect(url).toBe('https://api.cloud.capawesome.io/v1/apps/app-1/channels/channel-1');
+  });
+
+  it('deletes a channel by name via the collection endpoint', async () => {
+    const { getLastRequest } = mockFetchJson(null);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.channels.delete({ appId: 'app-1', name: 'production/staging' });
+
+    const { url, init } = getLastRequest();
+    expect(init.method).toBe('DELETE');
+    const parsed = new URL(url);
+    expect(parsed.pathname).toBe('/v1/apps/app-1/channels');
+    expect(parsed.searchParams.get('name')).toBe('production/staging');
+  });
+
+  it('prefers the id over the name when deleting a certificate', async () => {
+    const { getLastRequest } = mockFetchJson(null);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.certificates.delete({
+      appId: 'app-1',
+      certificateId: 'certificate-1',
+      name: 'ignored',
+    });
+
+    const parsed = new URL(getLastRequest().url);
+    expect(parsed.pathname).toBe('/v1/apps/app-1/certificates/certificate-1');
+    expect(parsed.searchParams.has('name')).toBe(false);
+  });
+
+  it('deletes an environment by name', async () => {
+    const { getLastRequest } = mockFetchJson(null);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.environments.delete({ appId: 'app-1', name: 'production' });
+
+    const parsed = new URL(getLastRequest().url);
+    expect(parsed.pathname).toBe('/v1/apps/app-1/environments');
+    expect(parsed.searchParams.get('name')).toBe('production');
+  });
+
+  it('throws when deleting without an id or a name', async () => {
+    mockFetchJson(null);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await expect(client.apps.destinations.delete({ appId: 'app-1' })).rejects.toThrow(
+      'Either an id or a name is required to delete a destination.',
+    );
+  });
+
   it('cancels a job by updating its status', async () => {
     const { getLastRequest } = mockFetchJson({ id: 'job-1', status: 'canceled' });
     const client = new CapawesomeCloud({ token: 't' });

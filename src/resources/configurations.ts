@@ -54,7 +54,16 @@ export interface UpdateConfigurationOptions {
 
 export interface DeleteConfigurationOptions {
   appId: string;
-  configurationId: string;
+  /**
+   * The id of the configuration to delete. Either `configurationId` or `name`
+   * must be provided; `configurationId` takes precedence.
+   */
+  configurationId?: string;
+  /**
+   * The name of the configuration to delete. Either `configurationId` or
+   * `name` must be provided; `configurationId` takes precedence.
+   */
+  name?: string;
 }
 
 export class ConfigurationsResource extends BaseResource {
@@ -109,12 +118,14 @@ export class ConfigurationsResource extends BaseResource {
   }
 
   /**
-   * Delete an app configuration.
+   * Delete an app configuration by id or name.
    */
   public async delete(options: DeleteConfigurationOptions): Promise<void> {
-    await this.http.request<void>({
-      method: 'DELETE',
-      path: `/v1/apps/${options.appId}/configurations/${options.configurationId}`,
+    await this.deleteByIdOrName({
+      collectionPath: `/v1/apps/${options.appId}/configurations`,
+      id: options.configurationId,
+      name: options.name,
+      resource: 'configuration',
     });
   }
 }

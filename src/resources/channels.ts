@@ -62,7 +62,16 @@ export interface UpdateChannelOptions {
 
 export interface DeleteChannelOptions {
   appId: string;
-  channelId: string;
+  /**
+   * The id of the channel to delete. Either `channelId` or `name` must be
+   * provided; `channelId` takes precedence.
+   */
+  channelId?: string;
+  /**
+   * The name of the channel to delete. Either `channelId` or `name` must be
+   * provided; `channelId` takes precedence.
+   */
+  name?: string;
 }
 
 export interface PauseChannelOptions {
@@ -127,12 +136,14 @@ export class ChannelsResource extends BaseResource {
   }
 
   /**
-   * Delete an app channel.
+   * Delete an app channel by id or name.
    */
   public async delete(options: DeleteChannelOptions): Promise<void> {
-    await this.http.request<void>({
-      method: 'DELETE',
-      path: `/v1/apps/${options.appId}/channels/${options.channelId}`,
+    await this.deleteByIdOrName({
+      collectionPath: `/v1/apps/${options.appId}/channels`,
+      id: options.channelId,
+      name: options.name,
+      resource: 'channel',
     });
   }
 
