@@ -37,6 +37,10 @@ export interface App {
 export interface ListAppsOptions extends PaginationOptions {
   organizationId: string;
   /**
+   * Filter apps by name.
+   */
+  name?: string;
+  /**
    * Filter apps by a search query.
    */
   query?: string;
@@ -152,6 +156,7 @@ export class AppsResource extends BaseResource {
       path: '/v1/apps',
       query: {
         organizationId: options.organizationId,
+        name: options.name,
         limit: options.limit,
         offset: options.offset,
         query: options.query,

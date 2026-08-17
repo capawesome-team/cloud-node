@@ -145,6 +145,28 @@ describe('resources', () => {
     expect((formData.get('file') as File).name).not.toBe('undefined');
   });
 
+  it('filters apps by name', async () => {
+    const { getLastRequest } = mockFetchJson([]);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.list({ organizationId: 'org-1', name: 'My App' });
+
+    const url = new URL(getLastRequest().url);
+    expect(url.pathname).toBe('/v1/apps');
+    expect(url.searchParams.get('name')).toBe('My App');
+  });
+
+  it('filters teams by name', async () => {
+    const { getLastRequest } = mockFetchJson([]);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.organizations.teams.list({ organizationId: 'org-1', name: 'Mobile' });
+
+    const url = new URL(getLastRequest().url);
+    expect(url.pathname).toBe('/v1/organizations/org-1/teams');
+    expect(url.searchParams.get('name')).toBe('Mobile');
+  });
+
   it('gets an organization by id', async () => {
     const { getLastRequest } = mockFetchJson({ id: 'org-1', name: 'Acme' });
     const client = new CapawesomeCloud({ token: 't' });

@@ -37,6 +37,10 @@ export interface TeamWithRelations extends Team {
 export interface ListTeamsOptions extends PaginationOptions {
   organizationId: string;
   /**
+   * Filter teams by name.
+   */
+  name?: string;
+  /**
    * Filter teams by a search query, matching the name or description.
    */
   query?: string;
@@ -100,7 +104,12 @@ export class TeamsResource extends BaseResource {
     return this.http.request<Team[]>({
       method: 'GET',
       path: `/v1/organizations/${options.organizationId}/teams`,
-      query: { query: options.query, limit: options.limit, offset: options.offset },
+      query: {
+        name: options.name,
+        query: options.query,
+        limit: options.limit,
+        offset: options.offset,
+      },
     });
   }
 
