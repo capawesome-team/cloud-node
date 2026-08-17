@@ -114,7 +114,7 @@ export class HttpClient {
       body = JSON.stringify(options.body);
     }
     const isIdempotent = IDEMPOTENT_METHODS.has(options.method);
-    const fetchImpl = this.fetchImpl ?? globalThis.fetch;
+    const fetchImpl = this.resolveFetch();
 
     for (let attempt = 0; ; attempt++) {
       let response: Response;
@@ -145,6 +145,16 @@ export class HttpClient {
 
       return response;
     }
+  }
+
+  private resolveFetch(): typeof fetch {
+    const fetchImpl = this.fetchImpl ?? globalThis.fetch;
+    if (typeof fetchImpl !== 'function') {
+      throw new Error(
+        'No `fetch` implementation available. Use Node.js 20.19 or later, or pass one via the `fetch` option.',
+      );
+    }
+    return fetchImpl;
   }
 
   private createUrl(path: string, query?: QueryParams): string {
