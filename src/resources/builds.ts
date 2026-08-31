@@ -48,7 +48,20 @@ export interface CreateBuildOptions {
   appBuildSourceId?: string;
   appCertificateId?: string;
   appCertificateName?: string;
+  /**
+   * @deprecated Use {@link CreateBuildOptions.appChannelIds} instead.
+   */
   appChannelId?: string;
+  /**
+   * The ids of the channels the build is deployed to after it succeeds. Web
+   * only.
+   */
+  appChannelIds?: string[];
+  /**
+   * The names of the channels the build is deployed to after it succeeds.
+   * Web only.
+   */
+  appChannelNames?: string[];
   /**
    * The id of the configuration to overwrite the native app configuration with.
    */
