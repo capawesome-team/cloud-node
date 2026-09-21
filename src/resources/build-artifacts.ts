@@ -26,10 +26,7 @@ export interface AppBuildArtifact {
   id: string;
   appBuildId: string;
   type: AppBuildArtifactType;
-  /**
-   * `null` for artifacts created before form factors existed, which target `mobile`.
-   */
-  formFactor: AppBuildArtifactFormFactor | null;
+  formFactor: AppBuildArtifactFormFactor;
   status: 'pending' | 'ready';
   totalSizeInBytes: number | null;
   totalDownloads: number;
