@@ -59,7 +59,7 @@ export interface CreateBuildOptions {
   appChannelIds?: string[];
   /**
    * The names of the channels the build is deployed to after it succeeds.
-   * Web only.
+   * Web only. Ignored if `appChannelIds` is set.
    */
   appChannelNames?: string[];
   /**
