@@ -15,12 +15,18 @@ export type AppBuildArtifactType =
   | 'zip';
 
 /**
+ * The form factor a build artifact targets.
+ */
+export type AppBuildArtifactFormFactor = 'automotive' | 'mobile' | 'tv' | 'watch';
+
+/**
  * An artifact produced by a native build.
  */
 export interface AppBuildArtifact {
   id: string;
   appBuildId: string;
   type: AppBuildArtifactType;
+  formFactor: AppBuildArtifactFormFactor;
   status: 'pending' | 'ready';
   totalSizeInBytes: number | null;
   totalDownloads: number;
