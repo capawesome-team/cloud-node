@@ -7,7 +7,7 @@ import { BaseResource } from './base';
 export type AppDestinationPlatform = 'android' | 'ios';
 
 /**
- * The type of app store a destination publishes to.
+ * The service a destination publishes builds to.
  */
 export type AppDestinationType =
   | 'app-store-connect'
