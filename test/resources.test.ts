@@ -46,6 +46,20 @@ describe('resources', () => {
     });
   });
 
+  it('creates a build with channel ids', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'build-1' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.builds.create({
+      appId: 'app-1',
+      appChannelIds: ['channel-1', 'channel-2'],
+    });
+
+    expect(JSON.parse(getLastRequest().init.body as string)).toEqual({
+      appChannelIds: ['channel-1', 'channel-2'],
+    });
+  });
+
   it('filters environments by name', async () => {
     const { getLastRequest } = mockFetchJson([]);
     const client = new CapawesomeCloud({ token: 't' });
