@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.4](https://github.com/capawesome-team/cloud-node/compare/v0.1.3...v0.1.4) (2026-09-26)
+
+
+### Features
+
+* add multi-channel options to builds.create ([#7](https://github.com/capawesome-team/cloud-node/issues/7)) ([ff5ec91](https://github.com/capawesome-team/cloud-node/commit/ff5ec917460fc5692c6da88b17998cdb523bee94))
+* add the destination type and Huawei AppGallery and Firebase App Distribution fields ([#10](https://github.com/capawesome-team/cloud-node/issues/10)) ([f02ee44](https://github.com/capawesome-team/cloud-node/commit/f02ee44372c42e5573a794fbf66f35ca23af49dc))
+* add the form factor of build artifacts ([#8](https://github.com/capawesome-team/cloud-node/issues/8)) ([64e22f2](https://github.com/capawesome-team/cloud-node/commit/64e22f211d8fe4dcbfa5d94dc7ffe5b97b98370f))
+
 ## [0.1.3](https://github.com/capawesome-team/cloud-node/compare/v0.1.2...v0.1.3) (2026-08-17)
 
 
