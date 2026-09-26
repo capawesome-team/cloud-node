@@ -28,7 +28,7 @@ export interface AppDestination {
   appId: string;
   name: string;
   platform: AppDestinationPlatform;
-  type: AppDestinationType | null;
+  type: AppDestinationType;
   createdAt: string;
   updatedAt: string;
 }
