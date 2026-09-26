@@ -7,6 +7,15 @@ import { BaseResource } from './base';
 export type AppDestinationPlatform = 'android' | 'ios';
 
 /**
+ * The type of app store a destination publishes to.
+ */
+export type AppDestinationType =
+  | 'app-store-connect'
+  | 'firebase-app-distribution'
+  | 'google-play'
+  | 'huawei-appgallery';
+
+/**
  * The Google Play release track.
  */
 export type GooglePlayTrack = 'internal' | 'alpha' | 'beta' | 'production';
@@ -19,6 +28,7 @@ export interface AppDestination {
   appId: string;
   name: string;
   platform: AppDestinationPlatform;
+  type: AppDestinationType | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -39,11 +49,14 @@ export interface CreateDestinationOptions {
   appId: string;
   name: string;
   platform?: AppDestinationPlatform;
+  type?: AppDestinationType;
   androidBuildArtifactType?: 'aab' | 'apk';
   androidPackageName?: string;
   androidReleaseStatus?: 'completed' | 'draft';
   googlePlayTrack?: GooglePlayTrack;
   appGoogleServiceAccountKeyId?: string;
+  firebaseAppId?: string;
+  firebaseTesterGroups?: string[];
   appAppleApiKeyId?: string;
   appleApiKeyId?: string;
   appleIssuerId?: string;
@@ -51,9 +64,12 @@ export interface CreateDestinationOptions {
   appleAppPassword?: string;
   appleAppId?: string;
   appleTeamId?: string;
+  huaweiAppId?: string;
+  huaweiClientId?: string;
+  huaweiClientSecret?: string;
 }
 
-export interface UpdateDestinationOptions extends Partial<CreateDestinationOptions> {
+export interface UpdateDestinationOptions extends Partial<Omit<CreateDestinationOptions, 'type'>> {
   appId: string;
   destinationId: string;
 }
