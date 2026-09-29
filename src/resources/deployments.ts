@@ -15,6 +15,11 @@ export interface AppDeployment {
    */
   jobId: string | null;
   /**
+   * The release notes published with the deployment, keyed by `default` and
+   * locale.
+   */
+  releaseNotes: Record<string, string> | null;
+  /**
    * The rollout percentage as a value between `0` and `1`.
    */
   rolloutPercentage: number;
@@ -41,6 +46,13 @@ export interface CreateDeploymentOptions {
   appChannelName?: string;
   appDestinationId?: string;
   appDestinationName?: string;
+  /**
+   * Release notes to publish with the deployment. The `default` entry is
+   * required; other keys are locales (e.g. `de-DE`) with translations. Google
+   * Play and Huawei AppGallery allow 500 characters per entry, other
+   * destinations 4000. Only supported for destination deployments.
+   */
+  releaseNotes?: Record<string, string>;
   /**
    * The rollout percentage as a value between `0` and `1`.
    */

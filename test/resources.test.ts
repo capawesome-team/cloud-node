@@ -28,6 +28,24 @@ describe('resources', () => {
     expect(JSON.parse(getLastRequest().init.body as string)).toEqual({ appBuildId: 'build-1' });
   });
 
+  it('creates a deployment with release notes', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'deployment-1' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.deployments.create({
+      appId: 'app-1',
+      appBuildId: 'build-1',
+      appDestinationId: 'destination-1',
+      releaseNotes: { default: 'Bug fixes.', 'de-DE': 'Fehlerbehebungen.' },
+    });
+
+    expect(JSON.parse(getLastRequest().init.body as string)).toEqual({
+      appBuildId: 'build-1',
+      appDestinationId: 'destination-1',
+      releaseNotes: { default: 'Bug fixes.', 'de-DE': 'Fehlerbehebungen.' },
+    });
+  });
+
   it('creates a build with a configuration', async () => {
     const { getLastRequest } = mockFetchJson({ id: 'build-1' });
     const client = new CapawesomeCloud({ token: 't' });

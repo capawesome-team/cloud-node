@@ -75,6 +75,13 @@ export interface CreateBuildOptions {
   appEnvironmentId?: string;
   appEnvironmentName?: string;
   adHocEnvironmentVariables?: Record<string, string>;
+  /**
+   * Release notes to publish with the deployment to the destination. The
+   * `default` entry is required; other keys are locales (e.g. `de-DE`) with
+   * translations. Google Play and Huawei AppGallery allow 500 characters per
+   * entry, other destinations 4000. Only together with `appDestinationId`.
+   */
+  releaseNotes?: Record<string, string>;
 }
 
 export interface UpdateBuildOptions {
