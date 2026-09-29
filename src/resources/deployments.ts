@@ -4,6 +4,15 @@ import { BaseResource } from './base';
 /**
  * A deployment that promotes a build to a channel or destination.
  */
+/**
+ * Release notes keyed by `default` and locale (e.g. `de-DE`). The `default`
+ * entry is required.
+ */
+export interface ReleaseNotes {
+  default: string;
+  [locale: string]: string;
+}
+
 export interface AppDeployment {
   id: string;
   appId: string;
@@ -18,7 +27,7 @@ export interface AppDeployment {
    * The release notes published with the deployment, keyed by `default` and
    * locale.
    */
-  releaseNotes: Record<string, string> | null;
+  releaseNotes: ReleaseNotes | null;
   /**
    * The rollout percentage as a value between `0` and `1`.
    */
@@ -52,7 +61,7 @@ export interface CreateDeploymentOptions {
    * Play and Huawei AppGallery allow 500 characters per entry, other
    * destinations 4000. Only supported for destination deployments.
    */
-  releaseNotes?: Record<string, string>;
+  releaseNotes?: ReleaseNotes;
   /**
    * The rollout percentage as a value between `0` and `1`.
    */
