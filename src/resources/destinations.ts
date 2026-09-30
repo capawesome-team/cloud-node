@@ -10,7 +10,7 @@ export type AppDestinationPlatform = 'android' | 'ios';
  * The service a destination publishes builds to.
  */
 export type AppDestinationType =
-  | 'app-store-connect'
+  | 'apple-app-store-connect'
   | 'firebase-app-distribution'
   | 'google-play'
   | 'huawei-appgallery';
@@ -64,9 +64,44 @@ export interface CreateDestinationOptions {
   appleAppPassword?: string;
   appleAppId?: string;
   appleTeamId?: string;
+  /**
+   * The external TestFlight beta groups to distribute the build to. At most
+   * 20 groups, none of which may contain a comma. Only supported for
+   * `apple-app-store-connect` destinations and requires an App Store Connect
+   * API key (`appAppleApiKeyId`).
+   */
+  appleBetaGroups?: string[];
+  /**
+   * Whether to cancel a submission that is waiting for review before
+   * submitting the build. Only supported for `apple-app-store-connect`
+   * destinations.
+   *
+   * @default false
+   */
+  appleRejectIfPossible?: boolean;
+  /**
+   * Whether Apple releases the version automatically after approval or
+   * manually. Only supported for `apple-app-store-connect` destinations.
+   *
+   * @default 'manual'
+   */
+  appleReleaseType?: 'after-approval' | 'manual';
+  /**
+   * Whether to submit the build for App Review. Only supported for
+   * `apple-app-store-connect` destinations and requires an App Store Connect
+   * API key (`appAppleApiKeyId`).
+   *
+   * @default false
+   */
+  appleSubmitForReview?: boolean;
   huaweiAppId?: string;
   huaweiClientId?: string;
   huaweiClientSecret?: string;
+  /**
+   * The locale (e.g. `en-US`) of the `default` release notes entry. Only
+   * supported for `google-play` and `huawei-appgallery` destinations.
+   */
+  defaultLanguage?: string | null;
 }
 
 export interface UpdateDestinationOptions extends Partial<Omit<CreateDestinationOptions, 'type'>> {

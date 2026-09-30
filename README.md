@@ -101,11 +101,23 @@ await client.apps.channels.resume({ appId, channelId: channel.id });
 Promote a build to a channel (live updates) or a destination (app store publishing):
 
 ```ts
-const deployment = await client.apps.deployments.create({
+// Roll out a live update to half of the devices on a channel
+await client.apps.deployments.create({
   appId,
   appBuildId,
   appChannelName: 'production',
   rolloutPercentage: 0.5,
+});
+
+// Publish a native build to an app store with localized release notes
+await client.apps.deployments.create({
+  appId,
+  appBuildId,
+  appDestinationName: 'Google Play',
+  releaseNotes: {
+    default: 'Bug fixes and performance improvements.',
+    'de-DE': 'Fehlerbehebungen und Leistungsverbesserungen.',
+  },
 });
 ```
 

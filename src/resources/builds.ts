@@ -2,6 +2,7 @@ import type { HttpClient } from '../http-client';
 import type { AppBuildType, BuildStack, PaginationOptions, Platform } from '../types';
 import { BaseResource } from './base';
 import { BuildArtifactsResource } from './build-artifacts';
+import type { ReleaseNotes } from './deployments';
 
 /**
  * A native build.
@@ -75,6 +76,13 @@ export interface CreateBuildOptions {
   appEnvironmentId?: string;
   appEnvironmentName?: string;
   adHocEnvironmentVariables?: Record<string, string>;
+  /**
+   * Release notes to publish with the deployment to the destination. The
+   * `default` entry is required; other keys are locales (e.g. `de-DE`) with
+   * translations. Google Play and Huawei AppGallery allow 500 characters per
+   * entry, other destinations 4000. Only together with `appDestinationId`.
+   */
+  releaseNotes?: ReleaseNotes;
 }
 
 export interface UpdateBuildOptions {
