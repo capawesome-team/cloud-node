@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.5](https://github.com/capawesome-team/cloud-node/compare/v0.1.4...v0.1.5) (2026-09-30)
+
+
+### Features
+
+* add release notes and Apple submission settings ([#11](https://github.com/capawesome-team/cloud-node/issues/11)) ([acb78e7](https://github.com/capawesome-team/cloud-node/commit/acb78e74b73d1aa1b1770f1ae4d12ff0bdd3dd9a))
+
 ## [0.1.4](https://github.com/capawesome-team/cloud-node/compare/v0.1.3...v0.1.4) (2026-09-26)
 
 
