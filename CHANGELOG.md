@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.6](https://github.com/capawesome-team/cloud-node/compare/v0.1.5...v0.1.6) (2026-10-01)
+
+
+### Features
+
+* **apps:** add `buildStack` and the `macos-golden-gate` stack ([#13](https://github.com/capawesome-team/cloud-node/issues/13)) ([9831767](https://github.com/capawesome-team/cloud-node/commit/9831767d351e47ff2e979c00a0ab5952c33be65b))
+
 ## [0.1.5](https://github.com/capawesome-team/cloud-node/compare/v0.1.4...v0.1.5) (2026-09-30)
 
 
