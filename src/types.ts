@@ -21,7 +21,7 @@ export type GitProvider = 'azure_devops' | 'bitbucket' | 'gitea' | 'git_http' | 
 /**
  * The macOS stack used to run a native build.
  */
-export type BuildStack = 'macos-sequoia' | 'macos-tahoe';
+export type BuildStack = 'macos-sequoia' | 'macos-tahoe' | 'macos-golden-gate';
 
 /**
  * The type of a native build.

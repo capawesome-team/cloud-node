@@ -188,6 +188,18 @@ describe('resources', () => {
     expect(url.searchParams.get('name')).toBe('My App');
   });
 
+  it('clears the default build stack of an app', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'app-1', buildStack: null });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.update({ appId: 'app-1', buildStack: null });
+
+    const { url, init } = getLastRequest();
+    expect(init.method).toBe('PATCH');
+    expect(url).toBe('https://api.cloud.capawesome.io/v1/apps/app-1');
+    expect(JSON.parse(init.body as string)).toEqual({ buildStack: null });
+  });
+
   it('filters teams by name', async () => {
     const { getLastRequest } = mockFetchJson([]);
     const client = new CapawesomeCloud({ token: 't' });
