@@ -1,5 +1,5 @@
 import type { HttpClient } from '../http-client';
-import type { AppType, PaginationOptions } from '../types';
+import type { AppType, BuildStack, PaginationOptions } from '../types';
 import { AutomationsResource } from './automations';
 import { BaseResource } from './base';
 import { BuildSourcesResource } from './build-sources';
@@ -30,6 +30,11 @@ export interface App {
    * The id of the default environment.
    */
   appEnvironmentId: string | null;
+  /**
+   * The default build stack for builds that do not specify one. `null` uses
+   * the Capawesome Cloud default.
+   */
+  buildStack: BuildStack | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -65,6 +70,11 @@ export interface UpdateAppOptions {
   type?: AppType;
   appChannelId?: string | null;
   appEnvironmentId?: string | null;
+  /**
+   * The default build stack for builds that do not specify one. `null` uses
+   * the Capawesome Cloud default.
+   */
+  buildStack?: BuildStack | null;
   appChannelDiscoveryEnabled?: boolean;
   nextAppBuildNumber?: number;
 }

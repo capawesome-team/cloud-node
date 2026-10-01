@@ -74,9 +74,16 @@ export interface CreateAutomationOptions {
   appEnvironmentName?: string;
 }
 
-export interface UpdateAutomationOptions extends Partial<CreateAutomationOptions> {
+export interface UpdateAutomationOptions extends Omit<
+  Partial<CreateAutomationOptions>,
+  'buildStack'
+> {
   appId: string;
   automationId: string;
+  /**
+   * The build stack to use. `null` uses the app's default build stack.
+   */
+  buildStack?: BuildStack | null;
   enabled?: boolean;
 }
 
