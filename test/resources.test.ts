@@ -124,6 +124,24 @@ describe('resources', () => {
     });
   });
 
+  it('creates an automation with channel ids', async () => {
+    const { getLastRequest } = mockFetchJson({ id: 'automation-1' });
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.automations.create({
+      appId: 'app-1',
+      name: 'nightly',
+      triggerType: 'branch',
+      appChannelIds: ['channel-1', 'channel-2'],
+    });
+
+    expect(JSON.parse(getLastRequest().init.body as string)).toEqual({
+      name: 'nightly',
+      triggerType: 'branch',
+      appChannelIds: ['channel-1', 'channel-2'],
+    });
+  });
+
   it('builds nested environment secret paths', async () => {
     const { getLastRequest } = mockFetchJson({ id: 'secret-1', key: 'API_KEY' });
     const client = new CapawesomeCloud({ token: 't' });

@@ -17,6 +17,7 @@ export interface AppAutomation {
   enabled: boolean;
   triggerType: AppAutomationTriggerType;
   triggerPattern: string | null;
+  appChannelIds: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -50,11 +51,24 @@ export interface CreateAutomationOptions {
    * The name of the certificate to use. Ignored if `appCertificateId` is set.
    */
   appCertificateName?: string;
+  /**
+   * @deprecated Use {@link CreateAutomationOptions.appChannelIds} instead.
+   */
   appChannelId?: string;
   /**
-   * The name of the channel to deploy to. Ignored if `appChannelId` is set.
+   * The ids of the channels the builds are deployed to after they succeed. Web
+   * only.
+   */
+  appChannelIds?: string[];
+  /**
+   * @deprecated Use {@link CreateAutomationOptions.appChannelNames} instead.
    */
   appChannelName?: string;
+  /**
+   * The names of the channels the builds are deployed to after they succeed.
+   * Web only. Ignored if `appChannelIds` is set.
+   */
+  appChannelNames?: string[];
   appConfigurationId?: string;
   /**
    * The name of the configuration to use. Ignored if `appConfigurationId` is
@@ -74,6 +88,10 @@ export interface CreateAutomationOptions {
   appEnvironmentName?: string;
 }
 
+/**
+ * Omitted fields stay unchanged. An empty `appChannelIds` or `appChannelNames`
+ * array removes all channels.
+ */
 export interface UpdateAutomationOptions extends Omit<
   Partial<CreateAutomationOptions>,
   'buildStack'
