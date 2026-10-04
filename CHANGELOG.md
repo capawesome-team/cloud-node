@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.7](https://github.com/capawesome-team/cloud-node/compare/v0.1.6...v0.1.7) (2026-10-04)
+
+
+### Features
+
+* add multi-channel options to automations.create and update ([#15](https://github.com/capawesome-team/cloud-node/issues/15)) ([1a982d2](https://github.com/capawesome-team/cloud-node/commit/1a982d2026d81d1c6f705ea1a7cb4426b7d212db))
+
 ## [0.1.6](https://github.com/capawesome-team/cloud-node/compare/v0.1.5...v0.1.6) (2026-10-01)
 
 
