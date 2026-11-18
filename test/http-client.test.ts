@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import packageJson from '../package.json';
 import { CapawesomeCloud, CapawesomeCloudError } from '../src/index';
+import { VERSION } from '../src/version';
 import { mockFetchJson } from './helpers';
 
 afterEach(() => {
@@ -16,6 +18,21 @@ describe('HttpClient', () => {
     const { url, init } = getLastRequest();
     expect(url).toBe('https://api.cloud.capawesome.io/v1/apps?organizationId=org-1');
     expect((init.headers as Record<string, string>).Authorization).toBe('Bearer test-token');
+  });
+
+  it('names itself in the User-Agent and the client header', async () => {
+    const { getLastRequest } = mockFetchJson([]);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    await client.apps.list({ organizationId: 'org-1' });
+
+    const headers = getLastRequest().init.headers as Record<string, string>;
+    expect(headers['User-Agent']).toBe(`capawesome-cloud-node/${VERSION}`);
+    expect(headers['X-Capawesome-Client']).toBe(`cloud-node/${VERSION}`);
+  });
+
+  it('names the version of package.json', () => {
+    expect(VERSION).toBe(packageJson.version);
   });
 
   it('respects a custom base url', async () => {

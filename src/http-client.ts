@@ -1,4 +1,5 @@
 import { CapawesomeCloudError } from './errors';
+import { VERSION } from './version';
 
 export const DEFAULT_BASE_URL = 'https://api.cloud.capawesome.io';
 export const DEFAULT_TIMEOUT = 60_000;
@@ -7,6 +8,8 @@ export const DEFAULT_MAX_RETRIES = 3;
 const RETRY_BASE_DELAY = 300;
 const RETRY_MAX_DELAY = 10_000;
 const IDEMPOTENT_METHODS = new Set(['GET', 'HEAD', 'PUT', 'DELETE']);
+const API_CLIENT = `cloud-node/${VERSION}`;
+const USER_AGENT = `capawesome-cloud-node/${VERSION}`;
 
 export interface HttpClientOptions {
   /**
@@ -105,6 +108,8 @@ export class HttpClient {
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.token}`,
       Accept: 'application/json',
+      'User-Agent': USER_AGENT,
+      'X-Capawesome-Client': API_CLIENT,
     };
     let body: FormData | string | undefined;
     if (options.formData) {
