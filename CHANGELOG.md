@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.8](https://github.com/capawesome-team/cloud-node/compare/v0.1.7...v0.1.8) (2026-11-18)
+
+
+### Features
+
+* identify the SDK in request headers ([#19](https://github.com/capawesome-team/cloud-node/issues/19)) ([c7715d3](https://github.com/capawesome-team/cloud-node/commit/c7715d30fbdfcd4ede5a1c0c36ef2507e6eb0437))
+
 ## [0.1.7](https://github.com/capawesome-team/cloud-node/compare/v0.1.6...v0.1.7) (2026-10-04)
 
 
