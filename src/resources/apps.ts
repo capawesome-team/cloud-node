@@ -125,7 +125,7 @@ export class AppsResource extends BaseResource {
    */
   public readonly destinations: DestinationsResource;
   /**
-   * Manage registered devices.
+   * Manage and probe registered devices.
    */
   public readonly devices: DevicesResource;
   /**
