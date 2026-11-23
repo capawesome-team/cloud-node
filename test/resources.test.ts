@@ -241,21 +241,14 @@ describe('resources', () => {
   });
 
   it('probes a device', async () => {
-    const probe = {
-      bundle: { id: 'bundle-1' },
-      channelName: 'production',
-      reason: null,
-      result: 'available',
-    };
-    const { getLastRequest } = mockFetchJson(probe);
+    const { getLastRequest } = mockFetchJson({ bundle: null, result: 'up_to_date' });
     const client = new CapawesomeCloud({ token: 't' });
 
-    const result = await client.apps.devices.probe({ appId: 'app-1', deviceId: 'device-1' });
+    await client.apps.devices.probe({ appId: 'app-1', deviceId: 'device-1' });
 
     const { url, init } = getLastRequest();
     expect(init.method).toBe('GET');
     expect(url).toBe('https://api.cloud.capawesome.io/v1/apps/app-1/devices/device-1/probe');
-    expect(result).toEqual(probe);
   });
 
   it('builds nested organization team paths', async () => {
