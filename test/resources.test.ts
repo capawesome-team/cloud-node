@@ -240,6 +240,24 @@ describe('resources', () => {
     expect(url).toBe('https://api.cloud.capawesome.io/v1/organizations/org-1');
   });
 
+  it('probes a device', async () => {
+    const probe = {
+      bundle: { id: 'bundle-1' },
+      channelName: 'production',
+      reason: null,
+      result: 'available',
+    };
+    const { getLastRequest } = mockFetchJson(probe);
+    const client = new CapawesomeCloud({ token: 't' });
+
+    const result = await client.apps.devices.probe({ appId: 'app-1', deviceId: 'device-1' });
+
+    const { url, init } = getLastRequest();
+    expect(init.method).toBe('GET');
+    expect(url).toBe('https://api.cloud.capawesome.io/v1/apps/app-1/devices/device-1/probe');
+    expect(result).toEqual(probe);
+  });
+
   it('builds nested organization team paths', async () => {
     const { getLastRequest } = mockFetchJson({ id: 'team-app-1' });
     const client = new CapawesomeCloud({ token: 't' });

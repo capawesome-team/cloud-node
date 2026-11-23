@@ -238,7 +238,7 @@ Resources mirror the API's path hierarchy. App-scoped resources are nested under
 | `client.apps.destinations`            | Manage app store publishing destinations.         |
 | `client.apps.environments`            | Manage environments, secrets and variables.       |
 | `client.apps.automations`             | Manage build automations.                         |
-| `client.apps.devices`                 | Manage registered devices.                        |
+| `client.apps.devices`                 | Manage and probe registered devices.              |
 | `client.apps.webhooks`                | Manage app webhooks.                              |
 | `client.apps.configurations`          | Manage native app configurations.                 |
 | `client.apps.repository`              | Link an app to a Git repository.                  |

@@ -22,6 +22,25 @@ export interface AppDevice {
   updatedAt: string;
 }
 
+/**
+ * What a device would get from an update check.
+ */
+export interface AppDeviceProbe {
+  /**
+   * The bundle the device would be offered. Set only when `result` is `available`.
+   */
+  bundle: { id: string } | null;
+  /**
+   * The name of the channel the device is on.
+   */
+  channelName: string | null;
+  /**
+   * Why the device would get no update, such as `channel_paused`. Set only when `result` is `skipped`.
+   */
+  reason: string | null;
+  result: 'available' | 'skipped' | 'up_to_date';
+}
+
 export interface ListDevicesOptions extends PaginationOptions {
   appId: string;
   /**
@@ -46,6 +65,11 @@ export interface UpdateDeviceOptions {
 }
 
 export interface DeleteDeviceOptions {
+  appId: string;
+  deviceId: string;
+}
+
+export interface ProbeDeviceOptions {
   appId: string;
   deviceId: string;
 }
@@ -96,6 +120,16 @@ export class DevicesResource extends BaseResource {
     await this.http.request<void>({
       method: 'DELETE',
       path: `/v1/apps/${options.appId}/devices/${options.deviceId}`,
+    });
+  }
+
+  /**
+   * Probe what an app device would get from an update check. Nothing is recorded.
+   */
+  public async probe(options: ProbeDeviceOptions): Promise<AppDeviceProbe> {
+    return this.http.request<AppDeviceProbe>({
+      method: 'GET',
+      path: `/v1/apps/${options.appId}/devices/${options.deviceId}/probe`,
     });
   }
 }
